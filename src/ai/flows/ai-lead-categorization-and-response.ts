@@ -1,7 +1,8 @@
+
 'use server';
 /**
  * @fileOverview This file implements a Genkit flow for categorizing lead inquiries,
- * generating draft responses, and simulating the "send to email" process.
+ * generating draft responses, and sending an actual email notification via Nodemailer.
  *
  * - aiLeadCategorizationAndResponse - The main function to call this flow.
  * - AILeadCategorizationAndResponseInput - The input type for the flow.
@@ -10,6 +11,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
+import nodemailer from 'nodemailer';
 
 const AILeadCategorizationAndResponseInputSchema = z.object({
   name: z.string().describe('The name of the lead submitting the contact form.'),
@@ -64,7 +66,7 @@ Your task is to process a new lead inquiry.
 
 2. Generate a professional draft response to the lead.
 
-3. Create a concise "Admin Notification" summary that includes the lead's contact details and the core request.
+3. Create a detailed "Admin Notification" summary that includes the lead's contact details and the core request.
 
 Lead Info:
 Name: {{{name}}}
@@ -90,17 +92,56 @@ const aiLeadCategorizationAndResponseFlow = ai.defineFlow(
       throw new Error('Failed to process lead.');
     }
 
-    // SIMULATION: Sending email to welldropp.tech@gmail.com
-    // In a real production app, you would use a library like 'resend' or 'nodemailer' here.
-    console.log('--- EMAIL NOTIFICATION SENT ---');
-    console.log('To: welldropp.tech@gmail.com');
-    console.log('Subject: New Lead from WELLDROPP Website');
-    console.log('Content:', output.adminNotification);
-    console.log('-------------------------------');
+    try {
+      // Configuration for Nodemailer using Gmail SMTP
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.GMAIL_USER || 'welldropp.tech@gmail.com',
+          pass: process.env.GMAIL_APP_PASSWORD, // Must be a 16-character App Password
+        },
+      });
 
-    return {
-      ...output,
-      sentToEmail: true,
-    };
+      const mailOptions = {
+        from: `"WELLDROPP Lead System" <${process.env.GMAIL_USER || 'welldropp.tech@gmail.com'}>`,
+        to: 'welldropp.tech@gmail.com',
+        subject: `[New Lead] ${output.category} Inquiry from ${input.name}`,
+        text: output.adminNotification,
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px; border: 1px solid #e2e8f0; padding: 20px; border-radius: 10px;">
+            <h2 style="color: #00e676;">New Contact Form Submission</h2>
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;">
+            <p><strong>Name:</strong> ${input.name}</p>
+            <p><strong>Email:</strong> ${input.email}</p>
+            <p><strong>Phone:</strong> ${input.phone || 'Not provided'}</p>
+            <p><strong>Service:</strong> ${input.service}</p>
+            <p><strong>Category (AI Identified):</strong> ${output.category}</p>
+            <div style="background: #f8fafc; padding: 15px; border-radius: 5px; margin-top: 20px;">
+              <p><strong>Message:</strong></p>
+              <p style="white-space: pre-wrap;">${input.message}</p>
+            </div>
+            <div style="margin-top: 30px; padding: 15px; border-left: 4px solid #00e676; background: #f0fff4;">
+              <p><strong>AI Draft Response:</strong></p>
+              <p>${output.draftResponse}</p>
+            </div>
+          </div>
+        `,
+      };
+
+      await transporter.sendMail(mailOptions);
+      console.log('--- EMAIL SENT TO ADMIN ---');
+      
+      return {
+        ...output,
+        sentToEmail: true,
+      };
+    } catch (error) {
+      console.error('Failed to send email:', error);
+      // We still return the output but mark sentToEmail as false
+      return {
+        ...output,
+        sentToEmail: false,
+      };
+    }
   }
 );
