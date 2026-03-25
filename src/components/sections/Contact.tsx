@@ -23,7 +23,6 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select"
-import { aiLeadCategorizationAndResponse } from "@/ai/flows/ai-lead-categorization-and-response"
 import { useToast } from "@/hooks/use-toast"
 import { Mail, Phone, MapPin, Clock } from "lucide-react"
 
@@ -60,24 +59,28 @@ export function Contact() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true)
     try {
-      const result = await aiLeadCategorizationAndResponse({
-        name: `${values.firstName} ${values.lastName}`.trim(),
-        email: values.email,
-        phone: values.phone,
-        service: values.service,
-        message: values.message
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
       })
-      
+
+      const result = await response.json()
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Something went wrong')
+      }
+
       toast({
         title: "✓ Message Sent Successfully!",
-        description: `Your inquiry has been categorized as "${result.category}". Our team has been notified at welldropp.tech@gmail.com.`,
+        description: result.message || "Our team has been notified at welldropp.tech@gmail.com. We'll get back to you soon!",
       })
       form.reset()
-    } catch (error) {
+    } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Submission Error",
-        description: "We couldn't process your message right now. Please try again later or email us directly.",
+        description: error.message || "We couldn't process your message right now. Please try again later or email us directly.",
       })
     } finally {
       setIsSubmitting(false)
