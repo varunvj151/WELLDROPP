@@ -1,8 +1,15 @@
 "use client"
 
 import Link from "next/link"
+import * as React from "react"
 
 export function Footer() {
+  const [year, setYear] = React.useState<number | null>(null)
+
+  React.useEffect(() => {
+    setYear(new Date().getFullYear())
+  }, [])
+
   return (
     <footer className="bg-background border-t border-border pt-20 pb-10">
       <div className="container mx-auto px-6">
@@ -51,7 +58,7 @@ export function Footer() {
 
         <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-xs font-bold text-muted/60 uppercase tracking-widest">
-            © {new Date().getFullYear()} Welldropp Technologies. All rights reserved.
+            © {year || '2025'} Welldropp Technologies. All rights reserved.
           </p>
           <div className="flex gap-4">
             {['𝕏', 'in', 'gh', 'tg'].map((social) => (

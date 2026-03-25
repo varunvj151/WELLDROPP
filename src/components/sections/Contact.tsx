@@ -28,11 +28,11 @@ import { Mail, Phone, MapPin, Clock } from "lucide-react"
 
 const formSchema = z.object({
   firstName: z.string().min(1, { message: "Required" }),
-  lastName: z.string().min(1, { message: "Required" }),
+  lastName: z.string().optional().or(z.literal('')),
   email: z.string().email({ message: "Invalid email" }),
   phone: z.string().optional(),
   service: z.string().min(1, { message: "Please select a service" }),
-  message: z.string().min(5, { message: "Message too short" }),
+  message: z.string().min(2, { message: "Message too short" }),
 })
 
 export function Contact() {
@@ -55,7 +55,7 @@ export function Contact() {
     setIsSubmitting(true)
     try {
       const result = await aiLeadCategorizationAndResponse({
-        name: `${values.firstName} ${values.lastName}`.trim(),
+        name: `${values.firstName} ${values.lastName || ''}`.trim(),
         email: values.email,
         message: values.message
       })
