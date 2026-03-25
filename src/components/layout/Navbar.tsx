@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 
 const navLinks = [
   { name: "Services", href: "#services" },
+  { name: "Works", href: "#works" },
   { name: "About", href: "#about" },
   { name: "Pricing", href: "#pricing" },
   { name: "Research", href: "#research" },
@@ -69,7 +70,7 @@ export function Navbar() {
       <div
         className={cn(
           "md:hidden absolute top-full left-0 right-0 bg-background/98 backdrop-blur-xl border-b border-border transition-all duration-300 overflow-hidden",
-          isOpen ? "max-h-[400px] py-6" : "max-h-0"
+          isOpen ? "max-h-[500px] py-6" : "max-h-0"
         )}
       >
         <div className="flex flex-col gap-4 px-6">

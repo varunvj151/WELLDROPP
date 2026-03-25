@@ -4,6 +4,7 @@ import { Hero } from "@/components/sections/Hero"
 import { Services } from "@/components/sections/Services"
 import { Research } from "@/components/sections/Research"
 import { Portfolio } from "@/components/sections/Portfolio"
+import { Testimonials } from "@/components/sections/Testimonials"
 import { Pricing } from "@/components/sections/Pricing"
 import { Contact } from "@/components/sections/Contact"
 import { Toaster } from "@/components/ui/toaster"
@@ -58,7 +59,8 @@ export default function Home() {
       </section>
 
       <Services />
-      <Portfolio /> {/* This is now Testimonials per design */}
+      <Portfolio />
+      <Testimonials />
       <Pricing />
       <Research />
       <Contact />
