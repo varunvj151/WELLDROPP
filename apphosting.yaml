@@ -8,6 +8,6 @@ runConfig:
 
 env:
   - variable: GMAIL_USER
-    secret: GMAIL_USER
+    value: "welldropp.tech@gmail.com"
   - variable: GMAIL_APP_PASSWORD
-    secret: GMAIL_APP_PASSWORD
+    value: "cunf kxxe slmj scjy"

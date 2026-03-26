@@ -38,6 +38,7 @@ const formSchema = z.object({
 export function Contact() {
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = React.useState(false)
+  const [submitted, setSubmitted] = React.useState(false)
   const [mounted, setMounted] = React.useState(false)
 
   React.useEffect(() => {
@@ -71,10 +72,8 @@ export function Contact() {
         throw new Error(result.message || 'Something went wrong')
       }
 
-      toast({
-        title: "✓ Message Sent Successfully!",
-        description: result.message || "Our team has been notified at welldropp.tech@gmail.com. We'll get back to you soon!",
-      })
+      setSubmitted(true)
+      setTimeout(() => setSubmitted(false), 5000)
       form.reset()
     } catch (error: any) {
       toast({
@@ -202,14 +201,8 @@ export function Contact() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="bg-card border-border">
-                            <SelectItem value="Agentic AI System">Agentic AI System</SelectItem>
-                            <SelectItem value="Telegram / Email Bot">Telegram / Email Bot</SelectItem>
-                            <SelectItem value="Customer Care Chatbot">Customer Care Chatbot</SelectItem>
-                            <SelectItem value="E-Commerce Platform">E-Commerce Platform</SelectItem>
-                            <SelectItem value="Analytics Dashboard">Analytics Dashboard</SelectItem>
-                            <SelectItem value="Website Builder">Website Builder</SelectItem>
-                            <SelectItem value="ML/DL Research">ML/DL Research</SelectItem>
-                            <SelectItem value="Custom / Enterprise">Custom / Enterprise</SelectItem>
+                            <SelectItem value="Web Development">Web Development</SelectItem>
+                            <SelectItem value="UI/UX Design">UI/UX Design</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -243,6 +236,11 @@ export function Contact() {
                     {isSubmitting ? "Processing..." : "Send Message →"}
                   </Button>
                 </form>
+                {submitted && (
+                  <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-800 font-semibold text-center transition-opacity duration-500 ease-in-out opacity-100">
+                    ✓ Message Sent Successfully! Our team has been notified. We'll get back to you soon!
+                  </div>
+                )}
               </Form>
             </div>
           </div>
