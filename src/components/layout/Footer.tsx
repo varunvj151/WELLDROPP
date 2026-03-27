@@ -55,8 +55,8 @@ export function Footer() {
             <ul className="space-y-4 text-sm font-semibold text-muted-foreground">
               <li><Link href="#about" className="hover:text-primary transition-colors">About Us</Link></li>
               <li><Link href="#research" className="hover:text-primary transition-colors">Research Lab</Link></li>
-              <li><Link href="#contact" className="hover:text-primary transition-colors">Careers</Link></li>
-              <li><Link href="#research" className="hover:text-primary transition-colors">Blog</Link></li>
+              <li><Link href="#contact" className="hover:text-primary transition-colors">Contact Us</Link></li>
+              <li><Link href="#works" className="hover:text-primary transition-colors">Our Work</Link></li>
             </ul>
           </div>
 
@@ -75,9 +75,14 @@ export function Footer() {
             © {year || '2025'} Welldropp Technologies. All rights reserved.
           </p>
           <div className="flex gap-4">
-            {['𝕏', 'in', 'gh', 'tg'].map((social) => (
-              <Link key={social} href="#" className="w-10 h-10 rounded-xl bg-card border border-border flex items-center justify-center font-bold text-sm hover:border-primary hover:bg-primary/5 transition-all">
-                {social}
+            {[
+              { label: '𝕏', href: 'https://x.com/welldropp', title: 'Follow us on X (Twitter)' },
+              { label: 'in', href: 'https://linkedin.com/company/welldropp', title: 'Connect on LinkedIn' },
+              { label: 'gh', href: 'https://github.com/welldropp', title: 'View on GitHub' },
+              { label: 'tg', href: 'https://t.me/welldropp', title: 'Join us on Telegram' },
+            ].map((social) => (
+              <Link key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" title={social.title} aria-label={social.title} className="w-10 h-10 rounded-xl bg-card border border-border flex items-center justify-center font-bold text-sm hover:border-primary hover:bg-primary/5 transition-all">
+                {social.label}
               </Link>
             ))}
           </div>

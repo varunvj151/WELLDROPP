@@ -9,8 +9,8 @@ import { Pricing } from "@/components/sections/Pricing"
 import { Contact } from "@/components/sections/Contact"
 import { Toaster } from "@/components/ui/toaster"
 import Link from "next/link"
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import { MsmeLogo } from "@/components/ui/MsmeLogo"
 
 export default function Home() {
   return (
@@ -76,13 +76,8 @@ export default function Home() {
                 
                 <div className="relative w-28 h-28 flex-shrink-0 flex items-center justify-center">
                   <div className="absolute inset-0 bg-primary/10 blur-2xl rounded-full opacity-50 group-hover:opacity-100 transition-opacity" />
-                  <div className="relative w-full h-full bg-white rounded-full p-2.5 shadow-xl group-hover:rotate-[5deg] group-hover:scale-110 transition-transform duration-700">
-                    <Image 
-                      src="/msme-logo.png" 
-                      alt="MSME Certified" 
-                      fill 
-                      className="object-contain p-2.5"
-                    />
+                  <div className="relative w-full h-full bg-white rounded-full p-2.5 shadow-xl group-hover:rotate-[5deg] group-hover:scale-110 transition-transform duration-700 flex items-center justify-center">
+                    <MsmeLogo size={88} />
                   </div>
                 </div>
                 
@@ -91,10 +86,7 @@ export default function Home() {
                   <p className="text-base font-semibold text-muted-foreground leading-relaxed mb-6 group-hover:text-foreground transition-colors">
                     <strong className="text-foreground">Welldropp</strong> is a government registered MSME enterprise, ensuring bank-grade reliability and process compliance for all operations.
                   </p>
-                  <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-primary/5 border border-primary/20 rounded-xl">
-                    <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Reg No.</span>
-                    <span className="text-xs text-primary font-black uppercase tracking-widest">UDYAM-XXXXXX</span>
-                  </div>
+
                 </div>
               </div>
             </div>
