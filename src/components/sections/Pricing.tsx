@@ -88,7 +88,9 @@ export function Pricing() {
                 variant={plan.popular ? "default" : "outline"}
                 className={cn(
                   "w-full rounded-full h-12 font-black transition-all",
-                  plan.popular ? "bg-primary text-background hover:bg-secondary" : "border-border hover:border-primary hover:text-primary"
+                  plan.popular 
+                    ? "bg-primary text-background hover:bg-secondary hover:text-background shadow-[0_0_20px_rgba(0,230,118,0.2)]" 
+                    : "border-border hover:bg-primary hover:text-background transition-colors"
                 )}
               >
                 <Link href="#contact">

@@ -29,7 +29,7 @@ export function Hero() {
           <Button asChild size="lg" className="h-14 w-full sm:w-auto px-10 rounded-full text-lg font-black bg-primary text-background hover:bg-secondary shadow-[0_0_28px_rgba(0,230,118,0.3)] hover:translate-y-[-2px] transition-all">
             <Link href="#services">Explore Services</Link>
           </Button>
-          <Button asChild size="lg" variant="outline" className="h-14 w-full sm:w-auto px-10 rounded-full text-lg font-bold border-border hover:border-primary hover:text-primary transition-all">
+          <Button asChild size="lg" variant="outline" className="h-14 w-full sm:w-auto px-10 rounded-full text-lg font-bold border-border hover:bg-primary hover:text-background transition-all">
             <Link href="#contact">Talk to Us</Link>
           </Button>
         </div>
