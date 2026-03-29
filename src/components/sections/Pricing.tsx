@@ -7,31 +7,31 @@ import { cn } from "@/lib/utils"
 
 const plans = [
   {
-    name: "Basic",
+    name: "Standard",
     price: "₹2,999",
-    description: "For solo founders and micro-businesses testing AI automation.",
-    features: ["1 Chatbot Integration", "Telegram or Email Bot", "2,000 AI interactions/mo", "Basic Analytics", "Email Support"],
+    description: "Ideal for data projects OR small business websites.",
+    features: ["Data Analytics", "(OR)", "3-Page Modern Website", "SaaS Service", "SEO-Optimization"],
     popular: false
   },
   {
-    name: "Starter",
+    name: "Professional",
     price: "₹9,999",
-    description: "For small businesses ready to automate support and operations.",
-    features: ["2 AI Agents", "Telegram + Email Bot", "Customer Care Chatbot", "15,000 AI interactions/mo", "Priority Email Support"],
-    popular: false
-  },
-  {
-    name: "Growth",
-    price: "₹29,999",
-    description: "For scaling companies that need serious AI infrastructure.",
-    features: ["5 AI Agents (custom)", "Full E-Commerce Platform", "Advanced Dashboard", "50,000 AI interactions/mo", "Website Builder Access", "24/7 Priority Support"],
+    description: "Complete digital infrastructure with AI automation.",
+    features: ["Interactive Dashboard", "1-7 Pages Website", "AI-Chatbot Service", "SEO-Optimization", "Custom Domain Name"],
     popular: true
   },
   {
-    name: "Enterprise",
-    price: "Custom",
-    description: "Full-suite AI with ML research, custom models, and dedicated team.",
-    features: ["Unlimited AI Agents", "Custom ML/DL Models", "Dedicated Infrastructure", "Unlimited interactions", "On-call Engineering Team", "SLA & Compliance"],
+    name: "Agentic",
+    price: "₹19,999",
+    description: "Enterprise AI agents integrated with e-commerce.",
+    features: ["AI Agent + Web Service", "Full E-Commerce Integration", "Advanced Automation", "Custom Logic", "Priority Support"],
+    popular: false
+  },
+  {
+    name: "Custom",
+    price: "Varies",
+    description: "Tailored services for complex scale and unique needs.",
+    features: ["Custom Service", "Dedicated Environment", "Specialized AI Flow", "SLA & Compliance", "Technical Advisory"],
     popular: false
   }
 ]
@@ -69,18 +69,26 @@ export function Pricing() {
                 </p>
                 <div className="flex items-baseline gap-1">
                   <span className="text-4xl font-black">{plan.price}</span>
-                  {plan.price !== "Custom" && <span className="text-muted-foreground text-sm">/mo</span>}
                 </div>
                 <p className="text-xs text-muted-foreground mt-4 leading-relaxed">{plan.description}</p>
               </div>
 
               <div className="space-y-4 mb-10 flex-grow">
-                {plan.features.map((feature) => (
-                  <div key={feature} className="flex items-start gap-3 text-sm">
-                    <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                    <span className="text-foreground/80">{feature}</span>
-                  </div>
-                ))}
+                {plan.features.map((feature) => {
+                  const isOR = feature === "(OR)"
+                  return (
+                    <div key={feature} className={cn("flex items-start gap-3 text-sm", isOR && "py-1")}>
+                      {!isOR && <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />}
+                      <span className={cn(
+                        isOR 
+                          ? "text-[10px] font-bold uppercase tracking-[0.2em] text-primary/80 pl-7" 
+                          : "text-foreground/80"
+                      )}>
+                        {feature}
+                      </span>
+                    </div>
+                  )
+                })}
               </div>
 
               <Button
@@ -94,7 +102,7 @@ export function Pricing() {
                 )}
               >
                 <Link href="#contact">
-                  {plan.price === "Custom" ? "Contact Sales" : "Get Started"}
+                  {plan.name === "Custom" ? "Contact Sales" : "Get Started"}
                 </Link>
               </Button>
             </div>

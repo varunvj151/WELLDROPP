@@ -1,4 +1,3 @@
-
 "use client"
 
 import * as React from "react"
@@ -27,29 +26,24 @@ import { useToast } from "@/hooks/use-toast"
 import { Mail, Phone, MapPin, Clock } from "lucide-react"
 
 const formSchema = z.object({
-  firstName: z.string().min(1, { message: "First name is required" }),
-  lastName: z.string().min(1, { message: "Last name is required" }),
+  first_name: z.string().min(1, { message: "First name is required" }),
+  last_name: z.string().optional(),
   email: z.string().email({ message: "Invalid email address" }),
-  phone: z.string().optional(),
+  phone: z.string().min(1, { message: "Phone number is required" }),
   service: z.string().min(1, { message: "Please select a service" }),
-  message: z.string().min(2, { message: "Message is too short" }),
+  message: z.string().min(1, { message: "Message is required" }),
 })
 
 export function Contact() {
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [submitted, setSubmitted] = React.useState(false)
-  const [mounted, setMounted] = React.useState(false)
-
-  React.useEffect(() => {
-    setMounted(true)
-  }, [])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      first_name: "",
+      last_name: "",
       email: "",
       phone: "",
       service: "",
@@ -57,41 +51,64 @@ export function Contact() {
     },
   })
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsSubmitting(true)
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
+      // PREPARING CLEAN EMAIL BODY AS REQUESTED
+      const emailBody = `
+New Contact Form Submission:
+
+Name: ${data.first_name} ${data.last_name || ""}
+Email: ${data.email}
+Phone: ${data.phone}
+Service: ${data.service}
+
+Message:
+${data.message}
+      `.trim();
+
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: "012cf280-c68e-4589-a206-628fbd19d8bc",
+          subject: "New Client Inquiry - Welldropp",
+          from_name: "Welldropp Website",
+          replyto: data.email,
+          first_name: data.first_name,
+          last_name: data.last_name,
+          email: data.email,
+          phone: data.phone,
+          service: data.service,
+          message: emailBody, // Using the formatted body
+        }),
       })
 
       const result = await response.json()
 
-      if (!response.ok || !result.success) {
-        throw new Error(result.message || 'Something went wrong')
+      if (result.success) {
+        setSubmitted(true)
+        toast({
+          title: "Message sent successfully",
+          description: "We'll get back to you shortly.",
+        })
+        form.reset()
+        setTimeout(() => setSubmitted(false), 5000)
+      } else {
+        throw new Error(result.message || "Failed to send message")
       }
-
-      setSubmitted(true)
-      setTimeout(() => setSubmitted(false), 5000)
-      form.reset()
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Submission Error",
-        description: error.message || "We couldn't process your message right now. Please try again later or email us directly.",
+        title: "Error Sending Message",
+        description: error.message || "Something went wrong. Please try again.",
       })
     } finally {
       setIsSubmitting(false)
     }
-  }
-
-  if (!mounted) {
-    return (
-      <section id="contact" className="py-24 bg-background min-h-[600px] flex items-center justify-center">
-        <div className="text-primary font-black animate-pulse">Loading Form...</div>
-      </section>
-    )
   }
 
   return (
@@ -133,7 +150,7 @@ export function Contact() {
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
-                      name="firstName"
+                      name="first_name"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-xs font-black uppercase tracking-widest text-muted-foreground">First Name</FormLabel>
@@ -146,7 +163,7 @@ export function Contact() {
                     />
                     <FormField
                       control={form.control}
-                      name="lastName"
+                      name="last_name"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-xs font-black uppercase tracking-widest text-muted-foreground">Last Name</FormLabel>
@@ -201,8 +218,10 @@ export function Contact() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="bg-card border-border">
-                            <SelectItem value="Web Development">Web Development</SelectItem>
-                            <SelectItem value="UI/UX Design">UI/UX Design</SelectItem>
+                            <SelectItem value="Agentic AI">Agentic AI</SelectItem>
+                            <SelectItem value="Telegram Bots">Telegram Bots</SelectItem>
+                            <SelectItem value="Custom Software">Custom Software</SelectItem>
+                            <SelectItem value="Enterprise Automation">Enterprise Automation</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -233,12 +252,12 @@ export function Contact() {
                     className="w-full h-14 rounded-full text-lg font-black bg-primary text-background hover:bg-secondary transition-all shadow-[0_10px_30px_rgba(0,230,118,0.2)]"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Processing..." : "Send Message →"}
+                    {isSubmitting ? "Sending..." : "Send Message →"}
                   </Button>
                 </form>
                 {submitted && (
-                  <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-800 font-semibold text-center transition-opacity duration-500 ease-in-out opacity-100">
-                    ✓ Message Sent Successfully! Our team has been notified. We'll get back to you soon!
+                  <div className="mt-6 p-4 bg-primary/10 border border-primary/20 rounded-xl text-primary font-semibold text-center animate-in fade-in slide-in-from-bottom-2">
+                    ✓ Message sent successfully
                   </div>
                 )}
               </Form>

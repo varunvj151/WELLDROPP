@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   description: 'AI Agents, Chatbots, Automation & Scalable Digital Solutions for the modern enterprise.',
 };
 
+import { Toaster } from "@/components/ui/toaster"
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -21,6 +23,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased selection:bg-primary/30 selection:text-primary">
         {children}
+        <Toaster />
       </body>
     </html>
   );
